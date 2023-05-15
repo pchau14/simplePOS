@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
-import {BrowserRouter} from 'react-router-dom';
+import {ApolloProvider, ApolloClient, InMemoryCache} from "@apollo/client";
+// import {BrowserRouter} from 'react-router-dom';
+import {AuthProvider} from './context/AuthProvider';
 
 const client = new ApolloClient({
     uri: "https://api.spacex.land/graphql/",
@@ -14,9 +15,9 @@ const client = new ApolloClient({
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <ApolloProvider client={client}>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
+        <AuthProvider>
+            <App/>
+        </AuthProvider>
     </ApolloProvider>
 );
 
