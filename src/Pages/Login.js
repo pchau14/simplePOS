@@ -1,16 +1,15 @@
-import React from 'react';
 import {useRef, useState, useEffect, useContext} from 'react';
 import AuthContext from '../context/AuthProvider';
 import axios from '../api/axios';
 
-const LOGIN_URL = '/auth';
+const LOGIN_URL = '/graphql';
 
 export default function Login() {
     const {setAuth} = useContext(AuthContext);
     const userRef = useRef();
     const errRef = useRef();
 
-    const [user, setUser] = useState('');
+    const [email, setEmail] = useState('');
 
     const [pwd, setPwd] = useState('');
 
@@ -24,21 +23,21 @@ export default function Login() {
 
     useEffect(() => {
         setErrMsg('');
-    }, [user, pwd]);
+    }, [email, pwd]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post(LOGIN_URL,
-                JSON.stringify({user, pwd}),
+                JSON.stringify({email, pwd}),
                 {
                     headers: {'Content-Type': 'application/json'},
                     withCredentials: true
                 });
             console.log(JSON.stringify(response?.data));
             const accessToken = response?.data?.accessToken;
-            setAuth({user, pwd, accessToken});
-            setUser('');
+            setAuth({email, pwd, accessToken});
+            setEmail('');
             setPwd('');
             setSuccess(true);
         } catch (e) {
@@ -51,9 +50,9 @@ export default function Login() {
             } else {
                 setErrMsg('Login failed');
             }
-            errRef.current.focus();
+            // errRef.current.focus();
         }
-        console.log(user, pwd);
+        console.log(email, pwd);
 
     };
 
@@ -69,12 +68,12 @@ export default function Login() {
                     <p>Please log in</p>
                     <input
                         type="text"
-                        id="username"
-                        placeholder="Username"
+                        id="email"
+                        placeholder="Email"
                         autoComplete="off"
                         ref={userRef}
-                        onChange={(e) => setUser(e.target.value)}
-                        value={user}
+                        onChange={(e) => setEmail(e.target.value)}
+                        value={email}
                         required
                     />
                     <input
@@ -85,7 +84,6 @@ export default function Login() {
                         value={pwd}
                         required
                     />
-                    {/* <input type="submit" defaultValue="Log In" /> */}
                     <button>Login</button>
                 </form>
             )}
