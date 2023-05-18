@@ -13,7 +13,7 @@ export default function Register() {
     const [firstname, setFirstname] = useState('');
     const [validFirstname, setValidFirstname] = useState(false);
 
-    const [lastname, setLasttname] = useState('');
+    const [lastname, setLastname] = useState('');
     const [validLastname, setValidLastname] = useState(false);
 
     const [email, setEmail] = useState('');
@@ -53,8 +53,8 @@ export default function Register() {
     const handleRegister = async (e) => {
         e.preventDefault();
         console.log(validPwd)
-        if (!validEmail || !validPwd) {
-            setErrMsg('Please input a valid username or password.');
+        if (!validEmail || !validPwd || !validFirstname || !validLastname) {
+            setErrMsg('Please input a valid firstname, lastname, email or password.');
         } else {
             try {
                 const response = await axios({
@@ -118,6 +118,26 @@ export default function Register() {
                     <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
                     <form className="login" onSubmit={handleRegister}>
                         <h2>Register</h2>
+                        <input
+                            type="text"
+                            id="firstname"
+                            placeholder="First Name"
+                            autoComplete="off"
+                            ref={userRef}
+                            onChange={(e) => setFirstname(e.target.value)}
+                            value={firstname}
+                            required
+                        />
+                        <input
+                            type="text"
+                            id="lastname"
+                            placeholder="Last Name"
+                            autoComplete="off"
+                            ref={userRef}
+                            onChange={(e) => setLastname(e.target.value)}
+                            value={lastname}
+                            required
+                        />
                         <input
                             type="text"
                             id="email"
