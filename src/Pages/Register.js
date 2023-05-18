@@ -49,6 +49,7 @@ export default function Register() {
     useEffect(() => {
         setValidPwd(PWD_REGEX.test(pwd));
     }, [pwd]);
+
     const handleRegister = async (e) => {
         e.preventDefault();
         console.log(validPwd)
@@ -66,8 +67,8 @@ export default function Register() {
                             input: {
                               firstname: "` + firstname + `"
                               lastname: "` + lastname + `"
-                              email: "test1@example.com"
-                              password: "Testcus123"
+                              email: "` + email + `"
+                              password: "` + pwd + `"
                               is_subscribed: true
                             }
                           ) {
@@ -83,9 +84,9 @@ export default function Register() {
                     }
                 });
                 console.log(response?.data);
-                console.log(response?.accessToken);
+                // console.log(response?.accessToken);
                 console.log(JSON.stringify(response));
-                setSuccess(true);
+                // setSuccess(true);
                 //clear state and controlled inputs
                 //need value attrib on inputs for this
                 setEmail('');
