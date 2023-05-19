@@ -1,8 +1,8 @@
 import {useRef, useState, useEffect} from 'react';
-import axios from '../api/axios';
+import {RegisterAction} from '../api/auth';
 
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-const USER_REGEX = /^[A-z]{1,10}$/;
+const USER_REGEX = /^[A-z][A-z0-9]{1,10}$/;
 const PWD_REGEX = /^[A-z0-9-_]{2,23}$/;
 const REGISTER_URL = '/graphql';
 
@@ -52,49 +52,24 @@ export default function Register() {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        console.log(validPwd)
         if (!validEmail || !validPwd || !validFirstname || !validLastname) {
             setErrMsg('Please input a valid firstname, lastname, email or password.');
         } else {
             try {
-                const response = await axios({
-                    url: REGISTER_URL,
-                    method: 'POST',
-                    data: {
-                        query: `
-                        mutation {
-                          createCustomer(
-                            input: {
-                              firstname: "` + firstname + `"
-                              lastname: "` + lastname + `"
-                              email: "` + email + `"
-                              password: "` + pwd + `"
-                              is_subscribed: true
-                            }
-                          ) {
-                            customer {
-                              firstname
-                              lastname
-                              email
-                              is_subscribed
-                            }
-                          }
-                        }
-                        `
-                    }
-                });
-                console.log(response?.data);
-                // console.log(response?.accessToken);
-                console.log(JSON.stringify(response));
-                // setSuccess(true);
-                //clear state and controlled inputs
-                //need value attrib on inputs for this
+                const response = await RegisterAction(REGISTER_URL, firstname, lastname, email, pwd);
+                // console.log(response?.data);
+                // console.log(JSON.stringify(response));
+                setSuccess(true);
+
+                // clear state for input
+                setFirstname('');
+                setLastname('');
                 setEmail('');
                 setPwd('');
-            } catch (err) {
-                if (!err?.response) {
+            } catch (e) {
+                if (!e?.response) {
                     setErrMsg('No Server Response');
-                } else if (err.response?.status === 409) {
+                } else if (e.response?.status === 409) {
                     setErrMsg('Email Exist');
                 } else {
                     setErrMsg('Registration Failed');
@@ -110,12 +85,13 @@ export default function Register() {
                 <section>
                     <h1>Register Successfully.</h1>
                     <p>
-                        <a href="#">Sign In</a>
+                        <a href="/login">Sign In</a>
                     </p>
                 </section>
             ) : (
                 <section>
-                    <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
+                    <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive"
+                       style={{color: "red"}}>{errMsg}</p>
                     <form className="login" onSubmit={handleRegister}>
                         <h2>Register</h2>
                         <input
