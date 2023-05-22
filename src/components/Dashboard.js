@@ -12,7 +12,7 @@ const Dashboard = () => {
     }, []);
 
     if (!auth) {
-        return <Navigate replace to='/login' />;
+        return <Navigate replace to='/' />;
     } else {
         return (
             <>
