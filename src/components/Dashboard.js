@@ -1,17 +1,10 @@
-import {useEffect, useState} from "react";
 import {Navigate} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 const Dashboard = () => {
-    const [auth, setAuth] = useState(null);
+    const {isAuth} = useSelector((state) => state.auth);
 
-    useEffect(() => {
-        const isLogin = localStorage.getItem('authenticated');
-        if (isLogin) {
-            setAuth(isLogin);
-        }
-    }, []);
-
-    if (!auth) {
+    if (!isAuth) {
         return <Navigate replace to='/' />;
     } else {
         return (
