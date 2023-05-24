@@ -1,5 +1,3 @@
-import {toError} from "graphql/jsutils/toError";
-
 export default function authHeader() {
     const token = localStorage.getItem('token');
     if (token) {
