@@ -12,6 +12,8 @@ const login = (data) => {
 
 const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("customer_token");
+    localStorage.removeItem("cart_id");
 };
 
 export default {login, logout};

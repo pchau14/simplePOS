@@ -46,23 +46,25 @@
     height: 50%;
 }
 
-.dashboardLayout {
-    border: 1px solid #c0c0c0;
+.ant-layout-sider-children {
     background-color: #ffffff;
+    border-right: 1px solid #c0c0c0;
 }
 
-.dashboardSider {
-    border-top: 1px solid #c0c0c0;
-    border-bottom: 1px solid #c0c0c0;
-    border-left: 1px solid #c0c0c0;
-    background-color: #ffffff;
+.logoutNav {
+    top: 0;
+    right: 0;
+    margin-right: 20px;
+    float: right;
+    position: absolute;
 }
 
-.dashboardHeader {
-    border-bottom: 1px solid #c0c0c0;
-    background-color: #ffffff;
+.logoutNav a {
+    color: #ffffff;
+    font-weight: bold;
 }
 
-.dashboardContent {
-    background-color: #ffffff;
+.logoutNav a:hover {
+    opacity: 0.55;
+    text-decoration: underline;
 }
