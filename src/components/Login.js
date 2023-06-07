@@ -5,6 +5,7 @@ import {login} from "../actions/auth";
 import 'antd/dist/reset.css';
 import {Button, Col, Form, Input, Row} from "antd";
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
+import {getCustomer, getProducts} from "../actions/user";
 
 const USER_REGEX = /^[A-z][A-z0-9]{1,10}$/;
 const PWD_REGEX = /^[A-z0-9]{7,}$/;

@@ -1,42 +1,35 @@
 import {Navigate} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import {useState, useEffect} from "react";
 import 'antd/dist/reset.css';
-import {Layout, Card, Row, Input, List, Typography, Button, Select} from "antd";
-import UserService from '../api/user';
+import {Layout, Card, Row, Input, List, Typography, Button} from "antd";
 import Logout from "./Logout";
 import Customer from "./Customer";
-import addToCart from "../api/product";
+import {addProduct} from "../actions/product";
+import {getProducts, getItems} from "../actions/user";
 
 const {Header, Sider, Content} = Layout;
 const {Meta} = Card;
 
 const Dashboard = () => {
-    const {isAuth} = useSelector((state) => state.auth);
-    const [products, setProducts] = useState([]);
+    const {isAuth} = useSelector(state => state.auth);
+    const {products} = useSelector(state => state.user);
+    const dispatch = useDispatch();
+
     const [search, setSearch] = useState('bag');
-    const [item, setItem] = useState('');
-    const [cart, setCart] = useState([]);
-
-    const fetchProducts = async () => {
-        const {data} = await UserService.getProducts(search);
-        const products = data.data.products.items;
-        setProducts(products);
-        // console.log(products);
-    };
-
-    const addItem = async () => {
-        await addToCart(item);
-        setItem('');
-    };
+    const [sku, setSku] = useState('');
 
     useEffect(() => {
-        fetchProducts();
+        dispatch(getProducts(search));
     }, [search]);
 
     useEffect(() => {
-        addItem();
-    }, [item]);
+        if (sku) {
+            dispatch(addProduct(localStorage.getItem('customer_token'), localStorage.getItem('cart_id'), sku)).then(() => {
+                dispatch(getItems(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
+            })
+        }
+    }, [sku]);
 
     if (!isAuth) {
         return <Navigate replace to='/'/>;
@@ -44,7 +37,7 @@ const Dashboard = () => {
         return (
             <>
                 <Layout>
-                    <Sider width='300'>
+                    <Sider width='400'>
                         <Customer/>
                     </Sider>
                     <Layout>
@@ -74,14 +67,13 @@ const Dashboard = () => {
                                             key={product.id}
                                             cover={<img src={product.image.url} alt={product.image.label}/>}
                                             onClick={() => {
-                                                setItem(product.sku);
+                                                setSku(product.sku);
                                             }}
                                         >
                                             <Meta title={<Typography.Paragraph>
                                                 Price:
                                                 ${product.price_range.minimum_price.regular_price.value}
                                             </Typography.Paragraph>}/>
-                                            <Button type='link'>Add</Button>
                                         </Card>
                                     );
                                 }}

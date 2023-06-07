@@ -2,18 +2,19 @@ import axios from "./axios";
 
 const GRAPH_URL = '/graphql';
 
-const addToCart = (data) => {
+const addToCart = (token, id, data) => {
+    console.log(data);
     return axios({
         url: GRAPH_URL,
         method: "POST",
         headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('customer_token')
+            Authorization: 'Bearer ' + token
         },
         data: {
             query: `
                 mutation {
                   addProductsToCart(
-                    cartId: "` + localStorage.getItem('cart_id') + `"
+                    cartId: "` + id + `"
                     cartItems: [
                       {
                         quantity: 1
@@ -37,13 +38,95 @@ const addToCart = (data) => {
                     }
                   }
                 }
-                
             `
         }
     })
-    //     .then((response) => {
-    //     console.log(response);
-    // })
 }
 
-export default addToCart;
+const removeFromCart = (token, id, data) => {
+    return axios({
+        url: GRAPH_URL,
+        method: 'POST',
+        headers: {
+            Authorization: 'Bearer ' + token
+        },
+        data: {
+            query: `
+            mutation {
+              updateCartItems(
+                input: {
+                  cart_id: "` + id + `",
+                  cart_items: [
+                    {
+                      cart_item_uid: "`+ data +`"
+                      quantity: 0
+                    }
+                  ]
+                }
+              ){
+                cart {
+                  items {
+                    uid
+                    product {
+                      name
+                    }
+                    quantity
+                  }
+                  prices {
+                    grand_total{
+                      value
+                      currency
+                    }
+                  }
+                }
+              }
+            }
+            `
+        }
+    })
+}
+
+const minusItem = (token, id, data, quantity) => {
+    return axios({
+        url: GRAPH_URL,
+        method: 'POST',
+        headers: {
+            Authorization: 'Bearer ' + token
+        },
+        data: {
+            query: `
+            mutation {
+              updateCartItems(
+                input: {
+                  cart_id: "` + id + `",
+                  cart_items: [
+                    {
+                      cart_item_uid: "`+ data +`"
+                      quantity: `+ quantity +`
+                    }
+                  ]
+                }
+              ){
+                cart {
+                  items {
+                    uid
+                    product {
+                      name
+                    }
+                    quantity
+                  }
+                  prices {
+                    grand_total{
+                      value
+                      currency
+                    }
+                  }
+                }
+              }
+            }
+            `
+        }
+    })
+}
+
+export default {addToCart, removeFromCart, minusItem};
