@@ -1,18 +1,24 @@
 import {useEffect, useState} from "react";
-import {Header} from "antd/es/layout/layout";
+import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {createToken, createCart, getItems, getCustomer} from "../actions/user";
-import {List, Select, Button, Popconfirm} from "antd";
-import {DeleteOutlined, MinusOutlined, PlusOutlined} from "@ant-design/icons";
+import {List, Select, Button, Popconfirm, Skeleton} from "antd";
+import {Header, Footer} from "antd/es/layout/layout";
+import {DeleteOutlined, MinusOutlined, PlusOutlined, ShoppingCartOutlined} from "@ant-design/icons";
+import {createToken, createCart, getItems, getCustomer, getTotal} from "../actions/user";
 import {addProduct, removeProduct, minusItem} from "../actions/product";
 
 const Customer = () => {
     const [email, setEmail] = useState('');
-    const {customers, items} = useSelector(state => state.user);
+    const {customers, items, prices} = useSelector(state => state.user);
     const dispatch = useDispatch();
+    let navigate = useNavigate();
 
     const getItemsInCart = () => {
         dispatch(getItems(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
+    }
+
+    const getTotalPrice = () => {
+        dispatch(getTotal(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
     }
 
     const removeItemInCart = (id) => {
@@ -43,6 +49,7 @@ const Customer = () => {
                 dispatch(createCart(localStorage.getItem('customer_token'))).then(() => {
                     if (localStorage.getItem('cart_id')) {
                         getItemsInCart();
+                        getTotalPrice();
                     }
                 })
             });
@@ -66,7 +73,7 @@ const Customer = () => {
                     {value: customer.email, label: customer.firstname + ' ' + customer.lastname}
                 ))}
             />
-            {items ? (
+            {email && items ? (
                 <List
                     dataSource={items}
                     renderItem={(item) => {
@@ -105,10 +112,36 @@ const Customer = () => {
                             </List.Item>
                         )
                     }}
-                ></List>
+                >
+                    {prices.subtotal_excluding_tax ? (
+                        <>
+                            <hr/>
+                            <div className="price-box">
+                                <div className="price">
+                                    <span>Total: </span>
+                                    <strong>{prices.subtotal_excluding_tax.value}</strong>
+                                </div>
+                            </div>
+                            <hr style={{borderStyle: "none"}}/>
+                            <Footer>
+                                <Button type="primary" icon={<ShoppingCartOutlined/>} onClick={() => {
+                                    navigate('/checkout');
+                                }}>
+                                    <strong>Check Out</strong>
+                                </Button>
+                            </Footer>
+                        </>
+                    ) : (
+                        <>
+                            <br/>
+                            <Skeleton active/>
+                        </>
+                    )}
+                </List>
             ) : (
-                <div>Empty</div>
+                <div></div>
             )}
+
         </>
     )
 }

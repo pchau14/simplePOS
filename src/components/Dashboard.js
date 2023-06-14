@@ -2,7 +2,7 @@ import {Navigate} from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
 import {useState, useEffect} from "react";
 import 'antd/dist/reset.css';
-import {Layout, Card, Row, Input, List, Typography, Button} from "antd";
+import {Layout, Card, Row, Input, List, Typography, Button, Skeleton} from "antd";
 import Logout from "./Logout";
 import Customer from "./Customer";
 import {addProduct} from "../actions/product";
@@ -57,28 +57,32 @@ const Dashboard = () => {
                             <Logout/>
                         </Header>
                         <Content>
-                            <List
-                                grid={{column: 5}}
-                                renderItem={(product) => {
-                                    return (
-                                        <Card
-                                            hoverable
-                                            title={product.name}
-                                            key={product.id}
-                                            cover={<img src={product.image.url} alt={product.image.label}/>}
-                                            onClick={() => {
-                                                setSku(product.sku);
-                                            }}
-                                        >
-                                            <Meta title={<Typography.Paragraph>
-                                                Price:
-                                                ${product.price_range.minimum_price.regular_price.value}
-                                            </Typography.Paragraph>}/>
-                                        </Card>
-                                    );
-                                }}
-                                dataSource={products}
-                            ></List>
+                            {products.length > 0 ? (
+                                <List
+                                    grid={{column: 5}}
+                                    dataSource={products}
+                                    renderItem={(product) => {
+                                        return (
+                                            <Card
+                                                hoverable
+                                                title={product.name}
+                                                key={product.id}
+                                                cover={<img src={product.image.url} alt={product.image.label}/>}
+                                                onClick={() => {
+                                                    setSku(product.sku);
+                                                }}
+                                            >
+                                                <Meta title={<Typography.Paragraph>
+                                                    Price:
+                                                    ${product.price_range.minimum_price.regular_price.value}
+                                                </Typography.Paragraph>}/>
+                                            </Card>
+                                        );
+                                    }}
+                                ></List>
+                            ) : (
+                                <Skeleton active/>
+                            )}
                         </Content>
                     </Layout>
                 </Layout>

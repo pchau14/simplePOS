@@ -1,25 +1,27 @@
 import {
-    GET_CUSTOMER_SUCCESS,
-    GET_CUSTOMER_FAIL,
-    GET_PRODUCTS_SUCCESS,
-    GET_PRODUCTS_FAIL,
-    GEN_TOKEN_SUCCESS,
-    GEN_TOKEN_FAIL,
-    CRT_CART_SUCCESS,
-    CRT_CART_FAIL,
-    GET_ITEMS_SUCCESS,
-    GET_ITEMS_FAIL,
-    SET_MESSAGE, GET_PRICE_SUCCESS, GET_PRICE_FAIL
+    GET_USER_INFO_SUCCESS,
+    GET_USER_INFO_FAIL,
+    SET_MESSAGE,
+    GET_SHIPPING_SUCCESS,
+    GET_SHIPPING_FAIL,
+    SET_SHIP_ADDRESS_SUCCESS,
+    SET_SHIP_ADDRESS_FAIL,
+    SET_BILL_ADDRESS_SUCCESS,
+    SET_BILL_ADDRESS_FAIL,
+    APPLY_COUPON_SUCCESS,
+    APPLY_COUPON_FAIL,
+    SET_PAYMENT_SUCCESS,
+    SET_PAYMENT_FAIL
 } from "./types";
-import CustomerService from '../api/user';
+import OrderService from '../api/order';
 
-export const getCustomer = () => (dispatch) => {
-    return CustomerService.getCustomers().then(
+export const getInfo = (token, id) => (dispatch) => {
+    return OrderService.getUserInfo(token, id).then(
         (data) => {
             dispatch({
-                type: GET_CUSTOMER_SUCCESS,
-                payload: data.data.items,
-            });
+                type: GET_USER_INFO_SUCCESS,
+                payload: data.data.data,
+            })
 
             return Promise.resolve();
         },
@@ -30,7 +32,7 @@ export const getCustomer = () => (dispatch) => {
                 || error.message || error.toString();
 
             dispatch({
-                type: GET_CUSTOMER_FAIL,
+                type: GET_USER_INFO_FAIL,
             })
 
             dispatch({
@@ -40,13 +42,16 @@ export const getCustomer = () => (dispatch) => {
         }
     )
 }
-export const getProducts = (value) => (dispatch) => {
-    return CustomerService.getProducts(value).then(
+
+export const getShipping = (token, id) => (dispatch) => {
+    return OrderService.getShippingMethod(token, id).then(
         (data) => {
             dispatch({
-                type: GET_PRODUCTS_SUCCESS,
-                payload: data.data.data.products.items,
+                type: GET_SHIPPING_SUCCESS,
+                payload: data.data.data.cart.shipping_addresses,
             })
+
+            return Promise.resolve();
         },
         (error) => {
             const message = (error.response
@@ -55,7 +60,7 @@ export const getProducts = (value) => (dispatch) => {
                 || error.message || error.toString();
 
             dispatch({
-                type: GET_PRODUCTS_FAIL,
+                type: GET_SHIPPING_FAIL,
             })
 
             dispatch({
@@ -66,13 +71,15 @@ export const getProducts = (value) => (dispatch) => {
     )
 }
 
-export const createToken = (user) => (dispatch) => {
-    return CustomerService.createCustomerToken(user).then(
+export const setShipAddress = (token, id, address) => (dispatch) => {
+    return OrderService.setShippingAddress(token, id, address).then(
         (data) => {
             dispatch({
-                type: GEN_TOKEN_SUCCESS,
+                type: SET_SHIP_ADDRESS_SUCCESS,
                 payload: data,
             })
+
+            return Promise.resolve();
         },
         (error) => {
             const message = (error.response
@@ -81,7 +88,7 @@ export const createToken = (user) => (dispatch) => {
                 || error.message || error.toString();
 
             dispatch({
-                type: GEN_TOKEN_FAIL,
+                type: SET_SHIP_ADDRESS_FAIL,
             })
 
             dispatch({
@@ -92,13 +99,15 @@ export const createToken = (user) => (dispatch) => {
     )
 }
 
-export const createCart = (token) => (dispatch) => {
-    return CustomerService.createCart(token).then(
+export const setBillAddress = (token, id, address) => (dispatch) => {
+    return OrderService.setBillingAddress(token, id, address).then(
         (data) => {
             dispatch({
-                type: CRT_CART_SUCCESS,
+                type: SET_BILL_ADDRESS_SUCCESS,
                 payload: data,
             })
+
+            return Promise.resolve();
         },
         (error) => {
             const message = (error.response
@@ -107,7 +116,7 @@ export const createCart = (token) => (dispatch) => {
                 || error.message || error.toString();
 
             dispatch({
-                type: CRT_CART_FAIL,
+                type: SET_BILL_ADDRESS_FAIL,
             })
 
             dispatch({
@@ -118,13 +127,15 @@ export const createCart = (token) => (dispatch) => {
     )
 }
 
-export const getItems = (token, id) => (dispatch) => {
-    return CustomerService.getCartInfo(token, id).then(
+export const applyCoupon = (token, id, code) => (dispatch) => {
+    return OrderService.applyCoupon(token, id, code).then(
         (data) => {
             dispatch({
-                type: GET_ITEMS_SUCCESS,
-                payload: data.data.data.cart.items,
+                type: APPLY_COUPON_SUCCESS,
+                payload: data.data,
             })
+
+            return Promise.resolve();
         },
         (error) => {
             const message = (error.response
@@ -133,7 +144,7 @@ export const getItems = (token, id) => (dispatch) => {
                 || error.message || error.toString();
 
             dispatch({
-                type: GET_ITEMS_FAIL,
+                type: APPLY_COUPON_FAIL,
             })
 
             dispatch({
@@ -144,13 +155,15 @@ export const getItems = (token, id) => (dispatch) => {
     )
 }
 
-export const getTotal = (token, id) => (dispatch) => {
-    return CustomerService.getCartInfo(token, id).then(
+export const setPayment = (token, id, code) => (dispatch) => {
+    return OrderService.setPayment(token, id, code).then(
         (data) => {
             dispatch({
-                type: GET_PRICE_SUCCESS,
-                payload: data.data.data.cart.prices,
+                type: SET_PAYMENT_SUCCESS,
+                payload: data,
             })
+
+            return Promise.resolve();
         },
         (error) => {
             const message = (error.response
@@ -159,7 +172,7 @@ export const getTotal = (token, id) => (dispatch) => {
                 || error.message || error.toString();
 
             dispatch({
-                type: GET_PRICE_FAIL,
+                type: SET_PAYMENT_FAIL,
             })
 
             dispatch({
@@ -169,3 +182,4 @@ export const getTotal = (token, id) => (dispatch) => {
         }
     )
 }
+

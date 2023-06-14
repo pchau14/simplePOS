@@ -5,7 +5,6 @@ import {login} from "../actions/auth";
 import 'antd/dist/reset.css';
 import {Button, Col, Form, Input, Row} from "antd";
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
-import {getCustomer, getProducts} from "../actions/user";
 
 const USER_REGEX = /^[A-z][A-z0-9]{1,10}$/;
 const PWD_REGEX = /^[A-z0-9]{7,}$/;
@@ -70,55 +69,57 @@ const Login = (props) => {
 
                 <Row type="flex" justify="center" align="middle" style={{minHeight: '100vh'}}>
                     <Col span={6}>
-                    <div className="loginForm" >
-                        <Form
-                            name="login"
-                            onFinish={handleSubmit}
-                            initialValues={{remember: true}}
-                        >
-                            <h2><strong>Welcome!</strong></h2>
-                            <p>Please log in</p>
-                            <Form.Item
-                                name="Username"
-                                rules={[{
-                                    required: true,
-                                    message: 'Please enter username'
-                                }]}
+                        <div className="loginForm">
+                            <div>
+                                <img src='/logo.jpg' alt='logo' style={{width: '150px'}}/>
+                            </div>
+                            <Form
+                                name="login"
+                                onFinish={handleSubmit}
+                                initialValues={{remember: true}}
                             >
-                                <Input
-                                    prefix={<UserOutlined className="site-form-item-icon"/>}
-                                    type="text"
-                                    id="username"
-                                    placeholder="Username"
-                                    autoComplete="off"
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    value={username}
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                name="Password"
-                                rules={[{
-                                    required: true,
-                                    message: 'Please enter password'
-                                }]}
-                            >
-                                <Input
-                                    prefix={<LockOutlined className="site-form-item-icon"/>}
-                                    type="password"
-                                    id="password"
-                                    placeholder="Password"
-                                    onChange={(e) => setPwd(e.target.value)}
-                                    value={pwd}
-                                    required
-                                />
-                            </Form.Item>
-                            <Form.Item>
-                                <Button type="primary" htmlType="submit" className="login-form-button">
-                                    Login
-                                </Button>
-                            </Form.Item>
-                        </Form>
-                    </div>
+                                <h2><strong>Welcome!</strong></h2>
+                                <Form.Item
+                                    name="Username"
+                                    rules={[{
+                                        required: true,
+                                        message: 'Please enter username'
+                                    }]}
+                                >
+                                    <Input
+                                        prefix={<UserOutlined className="site-form-item-icon"/>}
+                                        type="text"
+                                        id="username"
+                                        placeholder="Username"
+                                        autoComplete="off"
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        value={username}
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    name="Password"
+                                    rules={[{
+                                        required: true,
+                                        message: 'Please enter password'
+                                    }]}
+                                >
+                                    <Input
+                                        prefix={<LockOutlined className="site-form-item-icon"/>}
+                                        type="password"
+                                        id="password"
+                                        placeholder="Password"
+                                        onChange={(e) => setPwd(e.target.value)}
+                                        value={pwd}
+                                        required
+                                    />
+                                </Form.Item>
+                                <Form.Item>
+                                    <Button type="primary" htmlType="submit" className="login-form-button">
+                                        Login
+                                    </Button>
+                                </Form.Item>
+                            </Form>
+                        </div>
                     </Col>
                 </Row>
             </section>

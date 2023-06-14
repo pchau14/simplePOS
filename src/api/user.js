@@ -100,7 +100,7 @@ const createCart = (token) => {
     })
 }
 
-const getCartItems = (token, id) => {
+const getCartInfo = (token, id) => {
     return axios({
         url: GRAPH_URL,
         method: "POST",
@@ -111,7 +111,6 @@ const getCartItems = (token, id) => {
             query: `
                 {
                   cart(cart_id: "` + id + `") {
-                    email
                     items {
                       id
                       uid
@@ -133,6 +132,14 @@ const getCartItems = (token, id) => {
                       }
                       quantity
                     }
+                     prices {
+                      grand_total {
+                        value
+                      }
+                      subtotal_excluding_tax {
+                        value
+                      }
+                    }
                   }
                 }
             `
@@ -140,4 +147,4 @@ const getCartItems = (token, id) => {
     })
 }
 
-export default {getProducts, getCustomers, createCustomerToken, createCart, getCartItems};
+export default {getProducts, getCustomers, createCustomerToken, createCart, getCartInfo};

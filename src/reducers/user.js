@@ -8,7 +8,9 @@ import {
     CRT_CART_SUCCESS,
     CRT_CART_FAIL,
     GET_ITEMS_SUCCESS,
-    GET_ITEMS_FAIL
+    GET_ITEMS_FAIL,
+    GET_PRICE_SUCCESS,
+    GET_PRICE_FAIL
 } from "../actions/types";
 
 const initialState = {
@@ -16,7 +18,8 @@ const initialState = {
     products: [],
     isToken: false,
     cartId: null,
-    items: []
+    items: [],
+    prices: []
 };
 
 export default function (state = initialState, action) {
@@ -70,6 +73,16 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 items: null
+            };
+        case GET_PRICE_SUCCESS:
+            return {
+                ...state,
+                prices: action.payload
+            };
+        case GET_PRICE_FAIL:
+            return {
+                ...state,
+                prices: null
             };
         default:
             return state;

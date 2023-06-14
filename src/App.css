@@ -79,3 +79,75 @@
     text-align: start;
     align-self: center;
 }
+
+.price-box {
+    height: 2vh;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.price {
+    font-size: larger;
+    position: relative;
+    right: 10px;
+}
+
+.cartBox {
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    margin: 3vw;
+    box-shadow: -5px 5px 20px #d0d0d08a;
+}
+
+.cartHeaderCheckout {
+    height: 5vh;
+    align-items: flex-end;
+    display: flex;
+    justify-content: center;
+}
+.divider {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2.5vh;
+    margin-bottom: 2.5vh;
+}
+.divider:before, .divider:after{
+    content: "";
+    flex: 1 1;
+    border-bottom: 1px solid;
+    margin: auto;
+    opacity: 0.2;
+}
+.divider:before {
+    margin: auto 1vw;
+}
+.divider:after {
+    margin: auto 1vw;
+}
+
+.line {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2.5vh;
+    margin-bottom: 2.5vh;
+}
+.line:after{
+    content: "";
+    flex: 1 1;
+    border-bottom: 1px solid;
+    margin: auto;
+    opacity: 0.2;
+}
+.line:after {
+    margin: auto 1vw;
+}
+
+.shippingInput {
+    margin-right: 1vw;
+    width: 20vw;
+}
+
+.billingDivider {
+    opacity: 0.1;
+    margin-bottom: 1vh;
+}
