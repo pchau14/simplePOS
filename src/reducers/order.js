@@ -9,17 +9,25 @@ import {
     SET_BILL_ADDRESS_FAIL,
     APPLY_COUPON_SUCCESS,
     APPLY_COUPON_FAIL,
+    REMOVE_COUPON_SUCCESS,
+    REMOVE_COUPON_FAIL,
     SET_PAYMENT_SUCCESS,
-    SET_PAYMENT_FAIL
+    SET_PAYMENT_FAIL,
+    SET_SHIP_METHOD_SUCCESS,
+    SET_SHIP_METHOD_FAIL,
+    PLACE_ORDER_SUCCESS,
+    PLACE_ORDER_FAIL
 } from "../actions/types";
 
 const initialState = {
     infos: [],
     ship: [],
-    shippingAddress: [],
-    billingAddress: [],
-    coupon: [],
-    payment: []
+    shipAddress: false,
+    billAddress: false,
+    coupon: false,
+    payment: [],
+    shipMethod: false,
+    order: false
 }
 
 export default function (state = initialState, action) {
@@ -47,22 +55,22 @@ export default function (state = initialState, action) {
         case SET_SHIP_ADDRESS_SUCCESS:
             return {
                 ...state,
-                shippingAddress: action.payload
+                shipAddress: true
             };
         case SET_SHIP_ADDRESS_FAIL:
             return {
                 ...state,
-                shippingAddress: null
+                shipAddress: false
             }
         case SET_BILL_ADDRESS_SUCCESS:
             return {
                 ...state,
-                billingAddress: action.payload
+                billAddress: true
             };
         case SET_BILL_ADDRESS_FAIL:
             return {
                 ...state,
-                billingAddress: null
+                billAddress: false
             }
         case APPLY_COUPON_SUCCESS:
             return {
@@ -74,6 +82,16 @@ export default function (state = initialState, action) {
                 ...state,
                 coupon: null
             }
+        case REMOVE_COUPON_SUCCESS:
+            return {
+                ...state,
+                coupon: true
+            };
+        case REMOVE_COUPON_FAIL:
+            return {
+                ...state,
+                coupon: false
+            }
         case SET_PAYMENT_SUCCESS:
             return {
                 ...state,
@@ -83,6 +101,26 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 payment: null
+            }
+        case SET_SHIP_METHOD_SUCCESS:
+            return {
+                ...state,
+                shipMethod: true
+            };
+        case SET_SHIP_METHOD_FAIL:
+            return {
+                ...state,
+                shipMethod: false
+            }
+        case PLACE_ORDER_SUCCESS:
+            return {
+                ...state,
+                order: true
+            };
+        case PLACE_ORDER_FAIL:
+            return {
+                ...state,
+                order: false
             }
         default:
             return state;

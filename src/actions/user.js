@@ -66,8 +66,8 @@ export const getProducts = (value) => (dispatch) => {
     )
 }
 
-export const createToken = (user) => (dispatch) => {
-    return CustomerService.createCustomerToken(user).then(
+export const createToken = (token, email) => (dispatch) => {
+    return CustomerService.createCustomerToken(token, email).then(
         (data) => {
             dispatch({
                 type: GEN_TOKEN_SUCCESS,

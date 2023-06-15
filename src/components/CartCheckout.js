@@ -1,26 +1,40 @@
 import {Button, Form, Input, List, Skeleton, Space} from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import {applyCoupon} from "../actions/order";
-import {useEffect, useState} from "react";
-import {getTotal} from "../actions/user";
+import {applyCoupon, getInfo, getShipping, setShipMethod} from "../actions/order";
+import {useEffect} from "react";
+import {getItems, getTotal} from "../actions/user";
+import {removeCoupon} from "../actions/order";
+import {DeleteOutlined} from "@ant-design/icons";
 
 const CartCheckout = () => {
     const {items, prices} = useSelector(state => state.user);
-    const {ship, coupon} = useSelector(state => state.order);
-    const [msg, setMsg] = useState('');
+    const {infos, ship, coupon} = useSelector(state => state.order);
     const dispatch = useDispatch();
+
+    const getInfos = () => {
+        dispatch(getInfo(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
+    }
+
+    useEffect(() => {
+        dispatch(setShipMethod(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')))
+        dispatch(getTotal(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
+        dispatch(getItems(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
+        dispatch(getShipping(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
+        getInfos();
+    }, []);
 
     const handleApply = (e) => {
         dispatch(applyCoupon(localStorage.getItem('customer_token'), localStorage.getItem('cart_id'), e.coupon)).then(() => {
             dispatch(getTotal(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
+            getInfos();
         });
     };
 
-    useEffect(() => {
-        if (coupon.errors) {
-            setMsg(coupon.errors[0].message);
-        }
-    }, [coupon])
+    const handleClick = () => {
+        dispatch(removeCoupon(localStorage.getItem('customer_token'), localStorage.getItem('cart_id'))).then(() => {
+            getInfos();
+        });
+    }
 
     return (
         <div className='cartBox'>
@@ -32,7 +46,7 @@ const CartCheckout = () => {
                     dataSource={items}
                     renderItem={(item) => {
                         return (
-                            <List.Item>
+                            <List.Item key={item.id}>
                                 <List.Item.Meta
                                     avatar={<img src={item.product.image.url} style={{marginLeft: '2vw'}}
                                                  width={50}/>}
@@ -56,22 +70,45 @@ const CartCheckout = () => {
                     <strong>{ship[0].available_shipping_methods[0].carrier_title}: </strong>${ship[0].available_shipping_methods[0].amount.value}
                 </p>
             ) : (
-                <Skeleton active/>
+                <div></div>
             )}
+
             <h2 className='divider'>Discount Code</h2>
+            {infos.cart && infos.cart.applied_coupons ? (
+                <>
+                    {infos.cart.applied_coupons.map((item, index) => {
+                        return (
+                            <>
+                                <p style={{textAlign: 'start', marginLeft: '3vw', fontSize: 'medium'}} key={index}>
+                                    {item.code}
+                                    <span key={index}>
+                                        <Button onClick={handleClick} size={'small'} style={{marginLeft: '2vw'}} icon={<DeleteOutlined/>} danger/>
+                                    </span>
+                                </p>
+                            </>
+                        )
+                    })}
+                </>
+            ) : (
+                <></>
+            )}
+
             <Space.Compact>
                 <Form onFinish={handleApply}>
                     <Form.Item name='coupon'>
-                        <Input placeholder="Coupon Code"/>
+                        <Input allowClear placeholder="Coupon Code"/>
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType='submit'>Apply</Button>
                     </Form.Item>
                 </Form>
             </Space.Compact>
-            <p className="alert alert-danger" role="alert" style={{color: "red"}}>
-                {msg ?? ({msg})}
-            </p>
+
+            {coupon.errors ? (
+                <p className="alert alert-danger" role="alert" style={{color: "red"}}>
+                    {coupon.errors[0].message}
+                </p>
+            ) : (<></>)}
 
             <h2 className='divider'>Total</h2>
             {items.length > 0 && prices.grand_total ? (

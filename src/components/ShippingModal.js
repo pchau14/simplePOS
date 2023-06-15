@@ -1,7 +1,8 @@
 import {Button, Form, Input, Modal, Skeleton} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
-import {getInfo, setShipAddress} from "../actions/order";
+import {getInfo, getShipping, setShipAddress} from "../actions/order";
+import {getTotal} from "../actions/user";
 
 const ShippingModal = () => {
     const {infos} = useSelector(state => state.order);
@@ -41,6 +42,8 @@ const ShippingModal = () => {
         if (!err) {
             dispatch(setShipAddress(localStorage.getItem('customer_token'), localStorage.getItem('cart_id'), data)).then(() => {
                 dispatch(getInfo(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
+                dispatch(getShipping(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
+                dispatch(getTotal(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
             });
         }
     }, [err])

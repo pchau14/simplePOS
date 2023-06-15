@@ -2,7 +2,7 @@ import {Navigate} from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
 import {useState, useEffect} from "react";
 import 'antd/dist/reset.css';
-import {Layout, Card, Row, Input, List, Typography, Button, Skeleton} from "antd";
+import {Layout, Card, Row, Input, List, Typography, Skeleton} from "antd";
 import Logout from "./Logout";
 import Customer from "./Customer";
 import {addProduct} from "../actions/product";

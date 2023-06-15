@@ -8,7 +8,7 @@ const Shipping = () => {
     return (
         <div>
             <h2 className='line'>Shipping Address</h2>
-            {infos.cart ? (
+            {infos.cart && infos.cart.shipping_addresses ? (
                 <>
                     <List
                         dataSource={infos.cart.shipping_addresses}
@@ -38,7 +38,9 @@ const Shipping = () => {
                     <ShippingModal/>
                 </>
             ) : (
-                <Skeleton active/>
+                <>
+                    <Skeleton active/>
+                </>
             )}
         </div>
     )

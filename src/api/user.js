@@ -50,12 +50,12 @@ const getProducts = (value) => {
     })
 };
 
-const createCustomerToken = (email) => {
+const createCustomerToken = (token, email) => {
     return axios({
         url: GRAPH_URL,
         method: 'POST',
         headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
+            Authorization: 'Bearer ' + token
         },
         data: {
             query: `

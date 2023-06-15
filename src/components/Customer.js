@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {List, Select, Button, Popconfirm, Skeleton} from "antd";
 import {Header, Footer} from "antd/es/layout/layout";
 import {DeleteOutlined, MinusOutlined, PlusOutlined, ShoppingCartOutlined} from "@ant-design/icons";
-import {createToken, createCart, getItems, getCustomer, getTotal} from "../actions/user";
+import {createToken, createCart, getItems, getCustomer, getId ,getTotal} from "../actions/user";
 import {addProduct, removeProduct, minusItem} from "../actions/product";
 
 const Customer = () => {
@@ -24,18 +24,21 @@ const Customer = () => {
     const removeItemInCart = (id) => {
         dispatch(removeProduct(localStorage.getItem('customer_token'), localStorage.getItem('cart_id'), id)).then(() => {
             getItemsInCart();
+            getTotalPrice();
         });
     }
 
     const minusItemInCart = (id, num) => {
         dispatch(minusItem(localStorage.getItem('customer_token'), localStorage.getItem('cart_id'), id, (num - 1))).then(() => {
             getItemsInCart();
+            getTotalPrice();
         });
     }
 
     const addProductInCart = (sku) => {
         dispatch(addProduct(localStorage.getItem('customer_token'), localStorage.getItem('cart_id'), sku)).then(() => {
             getItemsInCart();
+            getTotalPrice();
         });
     }
 
@@ -45,7 +48,7 @@ const Customer = () => {
 
     useEffect(() => {
         if (email) {
-            dispatch(createToken(email)).then(() => {
+            dispatch(createToken(localStorage.getItem('token'), email)).then(() => {
                 dispatch(createCart(localStorage.getItem('customer_token'))).then(() => {
                     if (localStorage.getItem('cart_id')) {
                         getItemsInCart();

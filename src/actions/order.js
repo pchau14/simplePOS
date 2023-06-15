@@ -1,7 +1,6 @@
 import {
     GET_USER_INFO_SUCCESS,
     GET_USER_INFO_FAIL,
-    SET_MESSAGE,
     GET_SHIPPING_SUCCESS,
     GET_SHIPPING_FAIL,
     SET_SHIP_ADDRESS_SUCCESS,
@@ -10,8 +9,15 @@ import {
     SET_BILL_ADDRESS_FAIL,
     APPLY_COUPON_SUCCESS,
     APPLY_COUPON_FAIL,
+    REMOVE_COUPON_SUCCESS,
+    REMOVE_COUPON_FAIL,
     SET_PAYMENT_SUCCESS,
-    SET_PAYMENT_FAIL
+    SET_PAYMENT_FAIL,
+    SET_SHIP_METHOD_SUCCESS,
+    SET_SHIP_METHOD_FAIL,
+    PLACE_ORDER_SUCCESS,
+    PLACE_ORDER_FAIL,
+    SET_MESSAGE
 } from "./types";
 import OrderService from '../api/order';
 
@@ -155,11 +161,11 @@ export const applyCoupon = (token, id, code) => (dispatch) => {
     )
 }
 
-export const setPayment = (token, id, code) => (dispatch) => {
-    return OrderService.setPayment(token, id, code).then(
+export const removeCoupon = (token, id) => (dispatch) => {
+    return OrderService.removeCoupon(token, id).then(
         (data) => {
             dispatch({
-                type: SET_PAYMENT_SUCCESS,
+                type: REMOVE_COUPON_SUCCESS,
                 payload: data,
             })
 
@@ -172,7 +178,90 @@ export const setPayment = (token, id, code) => (dispatch) => {
                 || error.message || error.toString();
 
             dispatch({
+                type: REMOVE_COUPON_FAIL,
+            })
+
+            dispatch({
+                type: SET_MESSAGE,
+                payload: message,
+            })
+        }
+    )
+}
+
+export const setPayment = (token, id, code) => (dispatch) => {
+    return OrderService.setPayment(token, id, code).then(
+        (data) => {
+            dispatch({
+                type: SET_PAYMENT_SUCCESS,
+                payload: data.data.data.setPaymentMethodOnCart.cart.selected_payment_method.code,
+            })
+
+            return Promise.resolve();
+        },
+        (error) => {
+            const message = (error.response
+                    && error.response.data
+                    && error.response.data.message)
+                || error.message || error.toString();
+
+            dispatch({
                 type: SET_PAYMENT_FAIL,
+            })
+
+            dispatch({
+                type: SET_MESSAGE,
+                payload: message,
+            })
+        }
+    )
+}
+export const setShipMethod = (token, id) => (dispatch) => {
+    return OrderService.setShipMethod(token, id).then(
+        (data) => {
+            dispatch({
+                type: SET_SHIP_METHOD_SUCCESS,
+                payload: data,
+            })
+
+            return Promise.resolve();
+        },
+        (error) => {
+            const message = (error.response
+                    && error.response.data
+                    && error.response.data.message)
+                || error.message || error.toString();
+
+            dispatch({
+                type: SET_SHIP_METHOD_FAIL,
+            })
+
+            dispatch({
+                type: SET_MESSAGE,
+                payload: message,
+            })
+        }
+    )
+}
+
+export const placeOrder = (token, id) => (dispatch) => {
+    return OrderService.placeOrder(token, id).then(
+        (data) => {
+            dispatch({
+                type: PLACE_ORDER_SUCCESS,
+                payload: data,
+            })
+
+            return Promise.resolve();
+        },
+        (error) => {
+            const message = (error.response
+                    && error.response.data
+                    && error.response.data.message)
+                || error.message || error.toString();
+
+            dispatch({
+                type: PLACE_ORDER_FAIL,
             })
 
             dispatch({

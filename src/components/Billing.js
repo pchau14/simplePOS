@@ -8,7 +8,7 @@ const Billing = () => {
     return (
         <div style={{marginTop: '5vh'}}>
             <h2 className='line'>Billing Address</h2>
-            {infos.cart ? (
+            {infos.cart && infos.cart.billing_address ? (
                 <>
                     <Card hoverable style={{textAlign:'start'}}>
                         <p>Name: <strong>{infos.cart.billing_address.firstname} {infos.cart.billing_address.lastname}</strong></p>
@@ -25,7 +25,10 @@ const Billing = () => {
                     <BillingModal/>
                 </>
             ) : (
-                <Skeleton active/>
+                <>
+                    <div></div>
+                    <BillingModal/>
+                </>
             )}
         </div>
     )

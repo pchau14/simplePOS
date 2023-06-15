@@ -49,6 +49,9 @@ const getUserInfo = (token, id) => {
                       code
                       title
                     }
+                    applied_coupons {
+                     code
+                    }   
                   }
                 }
             `
@@ -121,7 +124,7 @@ const setShippingAddress = (token, id, address) => {
                         postcode: "` + address.postcode + `"
                         country_code: "VN"
                         telephone: "` + address.telephone + `"
-                        save_in_address_book: false
+                        save_in_address_book: true
                       }
                     }
                   ]
@@ -168,7 +171,7 @@ const setBillingAddress = (token, id, address) => {
                         postcode: "` + address.postcode + `"
                         country_code: "VN"
                         telephone: "` + address.telephone + `"
-                        save_in_address_book: false
+                        save_in_address_book: true
                     }
                   }
                 }
@@ -218,6 +221,32 @@ const applyCoupon = (token, id, code) => {
     })
 }
 
+const removeCoupon = (token, id) => {
+    return axios({
+        url: GRAPH_URL,
+        method: 'POST',
+        headers: {
+            Authorization: 'Bearer ' + token
+        },
+        data: {
+            query: `
+            mutation {
+              removeCouponFromCart(
+                input:
+                  { cart_id: "` + id + `" }
+                ) {
+                cart {
+                  applied_coupons {
+                    code
+                  }
+                }
+              }
+            }
+           `
+        }
+    })
+}
+
 const setPayment = (token, id, code) => {
     return axios({
         url: GRAPH_URL,
@@ -247,4 +276,76 @@ const setPayment = (token, id, code) => {
         }
     })
 }
-export default {getUserInfo, getShippingMethod, setShippingAddress, setBillingAddress, applyCoupon, setPayment};
+
+const setShipMethod = (token, id) => {
+    return axios({
+        url: GRAPH_URL,
+        method: 'POST',
+        headers: {
+            Authorization: 'Bearer ' + token
+        },
+        data: {
+            query: `
+            mutation {
+              setShippingMethodsOnCart(
+                input: {
+                  cart_id: "` + id + `",
+                  shipping_methods: [
+                    {
+                      carrier_code: "flatrate"
+                      method_code: "flatrate"
+                    }
+                  ]
+                }
+              ) {
+                cart {
+                  shipping_addresses {
+                    selected_shipping_method {
+                      carrier_code
+                      carrier_title
+                      method_code
+                      method_title
+                    }
+                  }
+                }
+              }
+            }
+            `
+        }
+    })
+}
+
+const placeOrder = (token, id) => {
+    return axios({
+        url: GRAPH_URL,
+        method: 'POST',
+        headers: {
+            Authorization: 'Bearer ' + token
+        },
+        data: {
+            query: `
+            mutation {
+              placeOrder(input: {
+                cart_id: "` + id + `"
+                }) {
+                order {
+                  order_number
+                }
+              }
+            }
+            `
+        }
+    })
+}
+
+export default {
+    getUserInfo,
+    getShippingMethod,
+    setShippingAddress,
+    setBillingAddress,
+    applyCoupon,
+    removeCoupon,
+    setPayment,
+    setShipMethod,
+    placeOrder
+};
