@@ -6,12 +6,17 @@ import CartCheckout from './CartCheckout';
 import Billing from "./Billing";
 import Payment from "./Payment";
 import Order from "./Order";
+import {ArrowLeftOutlined} from "@ant-design/icons";
 
 const Checkout = () => {
     return (
         <>
             <Header style={{color: 'white'}}>
                 <strong>CHECK OUT</strong>
+                <div className='returnBtn'>
+                    <ArrowLeftOutlined />
+                    <a href='/dashboard' > Back</a>
+                </div>
                 <Logout/>
             </Header>
             <Row>

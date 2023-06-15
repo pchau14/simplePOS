@@ -59,14 +59,13 @@
     position: absolute;
 }
 
-.logoutNav a {
+.logoutNav a, .returnBtn a {
     color: #ffffff;
     font-weight: bold;
 }
 
-.logoutNav a:hover {
+.logoutNav a:hover, .returnBtn a:hover {
     opacity: 0.55;
-    text-decoration: underline;
 }
 
 .itemQuantity p {
@@ -154,4 +153,9 @@
 
 .ant-modal-content {
     width: 110%;
+}
+
+.returnBtn {
+    position: relative;
+    float: left;
 }
