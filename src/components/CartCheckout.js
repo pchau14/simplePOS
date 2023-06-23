@@ -11,28 +11,27 @@ const CartCheckout = () => {
     const {infos, ship, coupon} = useSelector(state => state.order);
     const dispatch = useDispatch();
 
-    const getInfos = () => {
+    const renderTotalInfos = () => {
         dispatch(getInfo(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
+        dispatch(getTotal(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
     }
 
     useEffect(() => {
         dispatch(setShipMethod(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')))
-        dispatch(getTotal(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
         dispatch(getItems(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
         dispatch(getShipping(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
-        getInfos();
+        renderTotalInfos();
     }, []);
 
     const handleApply = (e) => {
         dispatch(applyCoupon(localStorage.getItem('customer_token'), localStorage.getItem('cart_id'), e.coupon)).then(() => {
-            dispatch(getTotal(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
-            getInfos();
+            renderTotalInfos();
         });
     };
 
-    const handleClick = () => {
+    const handleRemove = () => {
         dispatch(removeCoupon(localStorage.getItem('customer_token'), localStorage.getItem('cart_id'))).then(() => {
-            getInfos();
+            renderTotalInfos();
         });
     }
 
@@ -82,7 +81,8 @@ const CartCheckout = () => {
                                 <p style={{textAlign: 'start', marginLeft: '3vw', fontSize: 'medium'}} key={index}>
                                     {item.code}
                                     <span key={index}>
-                                        <Button onClick={handleClick} size={'small'} style={{marginLeft: '2vw'}} icon={<DeleteOutlined/>} danger/>
+                                        <Button onClick={handleRemove} size={'small'} style={{marginLeft: '2vw'}}
+                                                icon={<DeleteOutlined/>} danger/>
                                     </span>
                                 </p>
                             </>

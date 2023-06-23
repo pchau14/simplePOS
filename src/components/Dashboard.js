@@ -28,6 +28,7 @@ const Dashboard = () => {
             dispatch(addProduct(localStorage.getItem('customer_token'), localStorage.getItem('cart_id'), sku)).then(() => {
                 dispatch(getItems(localStorage.getItem('customer_token'), localStorage.getItem('cart_id')));
             })
+            setSku('');
         }
     }, [sku]);
 

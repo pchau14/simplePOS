@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {List, Select, Button, Popconfirm, Skeleton} from "antd";
 import {Header, Footer} from "antd/es/layout/layout";
 import {DeleteOutlined, MinusOutlined, PlusOutlined, ShoppingCartOutlined} from "@ant-design/icons";
-import {createToken, createCart, getItems, getCustomer, getId ,getTotal} from "../actions/user";
+import {createToken, createCart, getItems, getCustomer, getId, getTotal} from "../actions/user";
 import {addProduct, removeProduct, minusItem} from "../actions/product";
 
 const Customer = () => {
@@ -65,17 +65,22 @@ const Customer = () => {
                 <strong>CART</strong>
             </Header>
             <br/>
-            <Select
-                defaultValue='Customer'
-                style={{width: 200}}
-                size='large'
-                onChange={(value) => {
-                    (value) ? setEmail(value) : setEmail('');
-                }}
-                options={customers.map((customer) => (
-                    {value: customer.email, label: customer.firstname + ' ' + customer.lastname}
-                ))}
-            />
+            {customers ? (
+                <Select
+                    defaultValue='Customer'
+                    style={{width: 200}}
+                    size='large'
+                    onChange={(value) => {
+                        (value) ? setEmail(value) : setEmail('');
+                    }}
+                    options={customers.map((customer) => (
+                        {value: customer.email, label: customer.firstname + ' ' + customer.lastname}
+                    ))}
+                />
+            ) : (
+                <Skeleton/>
+            )}
+
             {email && items ? (
                 <List
                     dataSource={items}
